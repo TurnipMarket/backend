@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from database.connection import engine, Base
 from routes.auth import router as auth_router
 from routes.usuarios import router as usuarios_router
+from routes.productos import router as productos_router
 
 load_dotenv(Path(__file__).parent / ".env")
 
@@ -22,6 +23,7 @@ app.add_middleware(
 
 app.include_router(auth_router)
 app.include_router(usuarios_router)
+app.include_router(productos_router)
 
 
 @app.get("/health")

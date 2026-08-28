@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from Back_Opecode.models.usuario import Usuario
+from models.usuario import Usuario
 
 
 def obtener_usuario_por_id(db: Session, usuario_id: int) -> Usuario | None:

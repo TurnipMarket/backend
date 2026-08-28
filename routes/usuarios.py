@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from Back_Opecode.database.connection import get_db
-from Back_Opecode.services.usuario_service import (
+from database.connection import get_db
+from services.usuario_service import (
     obtener_usuario_por_id,
     obtener_usuario_por_alias,
     actualizar_alias,

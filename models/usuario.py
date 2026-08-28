@@ -1,7 +1,7 @@
 import secrets
 from datetime import datetime, timedelta, timezone
 from sqlalchemy import Column, Integer, String, DateTime, Boolean
-from Back_Opecode.database.connection import Base
+from database.connection import Base
 
 
 def _utcnow():

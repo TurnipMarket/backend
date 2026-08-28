@@ -2,9 +2,9 @@ import re
 import random
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
-from Back_Opecode.models.usuario import Usuario
-from Back_Opecode.utils.security import hash_password, verify_password
-from Back_Opecode.utils.email_sender import enviar_email
+from models.usuario import Usuario
+from utils.security import hash_password, verify_password
+from utils.email_sender import enviar_email
 
 CAMPOS_DISPONIBLES = {"username", "email"}
 

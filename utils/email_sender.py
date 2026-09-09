@@ -1,32 +1,63 @@
 import os
 import smtplib
-from email.message import EmailMessage
+import ssl
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from dotenv import load_dotenv
+ 
+load_dotenv()
+ 
+SMTP_HOST = os.getenv("SMTP_HOST")
+SMTP_PORT = int(os.getenv("SMTP_PORT", 465))
+SMTP_USER = os.getenv("SMTP_USER")
+SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
+SMTP_FROM_NAME = os.getenv("SMTP_FROM_NAME", "TurnipMarket")
+ 
+ 
+class EmailService:
+    """Encapsula la lógica de conexión y envío de correos por SMTP."""
+ 
+    def __init__(self):
+        if not all([SMTP_HOST, SMTP_USER, SMTP_PASSWORD]):
+            raise ValueError(
+                "Faltan variables de entorno SMTP. Revisá tu archivo .env"
+            )
+        self.host = SMTP_HOST
+        self.port = SMTP_PORT
+        self.user = SMTP_USER
+        self.password = SMTP_PASSWORD
+ 
+    def send_email(self, to_email: str, subject: str, html_content: str) -> bool:
+        """
+        Envía un correo HTML a un destinatario.
+        Devuelve True si se envió correctamente, False si hubo un error.
+        """
+        message = MIMEMultipart("alternative")
+        message["Subject"] = subject
+        message["From"] = f"{SMTP_FROM_NAME} <{self.user}>"
+        message["To"] = to_email
+ 
+        part_html = MIMEText(html_content, "html")
+        message.attach(part_html)
+ 
+        context = ssl.create_default_context()
+ 
+        try:
+            # Puerto 465 -> conexión SSL directa (recomendado con Gmail)
+            with smtplib.SMTP_SSL(self.host, self.port, context=context) as server:
+                server.login(self.user, self.password)
+                server.sendmail(self.user, to_email, message.as_string())
+            return True
+        except smtplib.SMTPAuthenticationError:
+            print("Error de autenticación: revisá usuario/contraseña de aplicación.")
+            return False
+        except Exception as e:
+            print(f"Error al enviar el correo: {e}")
+            return False
+ 
+ 
+email_service = EmailService()
 
 
-def _get_smtp_config():
-    return {
-        "host": os.getenv("SMTP_HOST", "smtp.gmail.com"),
-        "port": int(os.getenv("SMTP_PORT", "587")),
-        "user": os.getenv("SMTP_USER", ""),
-        "password": os.getenv("SMTP_PASSWORD", ""),
-        "from": os.getenv("SMTP_FROM", os.getenv("SMTP_USER", "")),
-        "use_tls": os.getenv("SMTP_USE_TLS", "true").lower() == "true",
-    }
-
-
-def enviar_email(destinatario: str, asunto: str, cuerpo: str) -> None:
-    cfg = _get_smtp_config()
-    if not cfg["user"] or not cfg["password"]:
-        return
-
-    msg = EmailMessage()
-    msg["Subject"] = asunto
-    msg["From"] = cfg["from"]
-    msg["To"] = destinatario
-    msg.set_content(cuerpo)
-
-    with smtplib.SMTP(cfg["host"], cfg["port"]) as server:
-        if cfg["use_tls"]:
-            server.starttls()
-        server.login(cfg["user"], cfg["password"])
-        server.send_message(msg)
+def enviar_email(to_email: str, subject: str, html_content: str) -> bool:
+    return email_service.send_email(to_email, subject, html_content)

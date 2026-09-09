@@ -6,6 +6,8 @@ from services.auth_service import (
     registrar_usuario,
     login_usuario,
     verificar_disponibilidad,
+    verificar_usuario,
+    reenviar_codigo,
 )
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
@@ -32,6 +34,17 @@ class LoginRequest(BaseModel):
     client: ClientInfo | None = None
 
 
+class VerificarRequest(BaseModel):
+    user_id: str
+    code: str
+    channel: str = "email"
+    client: ClientInfo | None = None
+
+
+class ReenviarRequest(BaseModel):
+    email: str
+
+
 @router.post("/register", status_code=201)
 def register(req: RegistroRequest, db: Session = Depends(get_db)):
     try:
@@ -56,6 +69,24 @@ def login(req: LoginRequest, db: Session = Depends(get_db)):
     if resultado is None:
         raise HTTPException(status_code=401, detail="Email o contraseña incorrectos")
     return {"sesion": "iniciada", "remember": req.remember, **resultado}
+
+
+@router.post("/verify")
+def verify(req: VerificarRequest, db: Session = Depends(get_db)):
+    try:
+        usuario = verificar_usuario(db, req.user_id, req.code)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    return {"mensaje": "Email verificado correctamente", "usuario_id": usuario.id}
+
+
+@router.post("/resend-code")
+def resend_code(req: ReenviarRequest, db: Session = Depends(get_db)):
+    try:
+        reenviar_codigo(db, req.email)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    return {"mensaje": "Nuevo código de verificación enviado a tu email"}
 
 
 @router.get("/availability")

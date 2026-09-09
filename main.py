@@ -1,7 +1,9 @@
 from pathlib import Path
 from dotenv import load_dotenv
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 from database.connection import engine, Base
 from routes.auth import router as auth_router
 from routes.usuarios import router as usuarios_router
@@ -24,6 +26,14 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(usuarios_router)
 app.include_router(productos_router)
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    body = exc.body.decode("utf-8") if isinstance(exc.body, bytes) else exc.body
+    print(f"[VALIDATION ERROR] path={request.url.path} body_recibido={body}")
+    print(f"[VALIDATION ERROR] errores={exc.errors()}")
+    return JSONResponse(status_code=422, content={"detail": exc.errors()})
 
 
 @app.get("/health")

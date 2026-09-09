@@ -69,7 +69,7 @@ def registrar_usuario(
 
 
 def _enviar_codigo(email: str, codigo: str) -> None:
-    asunto = "Código de verificación - Broker"
+    asunto = "Código de verificación - TurnipMarket"
     cuerpo = f"Tu código de verificación es: {codigo}\n\nVálido por 15 minutos."
     try:
         enviar_email(email, asunto, cuerpo)
@@ -77,10 +77,10 @@ def _enviar_codigo(email: str, codigo: str) -> None:
         raise ValueError(f"Error al enviar el email: {e}")
 
 
-def verificar_usuario(db: Session, email: str, codigo: str) -> Usuario:
-    usuario = db.query(Usuario).filter(Usuario.email == email).first()
+def verificar_usuario(db: Session, user_id: str, codigo: str) -> Usuario:
+    usuario = db.query(Usuario).filter(Usuario.id == user_id).first()
     if not usuario:
-        raise ValueError("Email no encontrado")
+        raise ValueError("Usuario no encontrado")
     if usuario.verificado:
         raise ValueError("El usuario ya está verificado")
     if not usuario.verificar_codigo(codigo):

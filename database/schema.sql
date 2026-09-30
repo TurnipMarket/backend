@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
     nombre TEXT NOT NULL,
     username TEXT UNIQUE,
     phone TEXT,
-    email TEXT NOT NULL UNIQUE,
+    email TEXT UNIQUE,
     password TEXT NOT NULL,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     verificado INTEGER DEFAULT 0,

@@ -33,15 +33,20 @@ def _generar_alias(db: Session, base: str) -> str:
 
 
 def registrar_usuario(
-    db: Session, username: str, email: str, phone: str | None, password: str
+    db: Session, username: str, email: str | None, phone: str | None, password: str
 ) -> Usuario:
     username = _normalizar_username(username)
     _validar_username(username)
-    email = email.strip().lower()
-    _validar_email(email)
+
+    if email:
+        email = email.strip().lower()
+        _validar_email(email)
+        if db.query(Usuario).filter(Usuario.email == email).first():
+            raise ValueError("El email ya está registrado")
 
     if db.query(Usuario).filter(Usuario.username == username).first():
         raise ValueError("El nombre de usuario ya está en uso")
+    
     if db.query(Usuario).filter(Usuario.email == email).first():
         raise ValueError("El email ya está registrado")
 
@@ -77,7 +82,7 @@ def _enviar_codigo(email: str, codigo: str) -> None:
         raise ValueError(f"Error al enviar el email: {e}")
 
 
-def verificar_usuario(db: Session, user_id: str, codigo: str) -> Usuario:
+def verificar_usuario(db: Session, user_id: int, codigo: str) -> Usuario:
     usuario = db.query(Usuario).filter(Usuario.id == user_id).first()
     if not usuario:
         raise ValueError("Usuario no encontrado")

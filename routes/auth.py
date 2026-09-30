@@ -20,7 +20,7 @@ class ClientInfo(BaseModel):
 
 class RegistroRequest(BaseModel):
     username: str
-    email: str
+    email: str | None = None 
     phone: str | None = None
     password: str
     verifyBy: str = "email"
@@ -35,7 +35,7 @@ class LoginRequest(BaseModel):
 
 
 class VerificarRequest(BaseModel):
-    user_id: str
+    user_id: int
     code: str
     channel: str = "email"
     client: ClientInfo | None = None

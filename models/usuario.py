@@ -19,7 +19,7 @@ class Usuario(Base):
     nombre = Column(String(100), nullable=False)
     username = Column(String(50), unique=True, nullable=True, index=True)
     phone = Column(String(30), nullable=True)
-    email = Column(String(255), unique=True, nullable=False, index=True)
+    email = Column(String(255), unique=True, nullable=True, index=True)
     password = Column(String(255), nullable=False)
     fecha_creacion = Column(DateTime, default=_utcnow)
     verificado = Column(Boolean, default=False)

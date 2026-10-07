@@ -1,0 +1,17 @@
+services:
+  backend:
+    build: .
+    container_name: turnip-backend
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    environment:
+      # Fuerza la base SQLite dentro del volumen (pisa lo que diga el .env)
+      - DATABASE_URL=sqlite:///./data/turnip.db
+    volumes:
+      - turnip_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  turnip_data:

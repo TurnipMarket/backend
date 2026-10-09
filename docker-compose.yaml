@@ -7,8 +7,9 @@ services:
     env_file:
       - .env
     environment:
-      # Fuerza la base SQLite dentro del volumen (pisa lo que diga el .env)
-      - DATABASE_URL=sqlite:///./data/turnip.db
+      # La base SQLite y las fotos de productos (data/uploads) viven en el volumen.
+      # El código lee DATABASE_PATH (no DATABASE_URL).
+      - DATABASE_PATH=/app/data/turnip.db
     volumes:
       - turnip_data:/app/data
     restart: unless-stopped

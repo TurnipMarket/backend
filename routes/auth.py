@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from database.connection import get_db
+from utils.auth_token import crear_token
 from services.auth_service import (
     registrar_usuario,
     login_usuario,
@@ -68,7 +69,20 @@ def login(req: LoginRequest, db: Session = Depends(get_db)):
         raise HTTPException(status_code=403, detail=str(e))
     if resultado is None:
         raise HTTPException(status_code=401, detail="Email o contraseña incorrectos")
-    return {"sesion": "iniciada", "remember": req.remember, **resultado}
+    token, expira = crear_token(resultado["usuario_id"], req.remember)
+    return {
+        "sesion": "iniciada",
+        "remember": req.remember,
+        **resultado,
+        "token": token,
+        "expiresAt": expira,
+        "user": {
+            "id": resultado["usuario_id"],
+            "username": resultado["username"],
+            "alias": resultado["alias"],
+            "email": resultado["email"],
+        },
+    }
 
 
 @router.post("/verify")

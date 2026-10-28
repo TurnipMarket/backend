@@ -18,14 +18,14 @@ class Base(DeclarativeBase):
 def ensure_columns(tabla: str, columnas: dict[str, str]) -> None:
     """create_all() no agrega columnas a tablas que ya existen: las suma acá.
 
-    `tabla` y `columnas` son constantes del código, nunca datos del usuario.
+    `columnas` mapea nombre de columna -> sentencia DDL completa (constante del código,
+    nunca datos del usuario). No se arma SQL por interpolación.
     """
     existentes = {c["name"] for c in inspect(engine).get_columns(tabla)}
     with engine.begin() as conn:
-        for nombre, definicion in columnas.items():
+        for nombre, ddl in columnas.items():
             if nombre not in existentes:
-                conn.execute(text(f"ALTER TABLE {tabla} ADD COLUMN {nombre} {definicion}"))
-
+                conn.execute(text(ddl))
 
 def get_db():
     db = SessionLocal()

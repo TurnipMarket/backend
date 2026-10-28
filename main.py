@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
@@ -13,13 +14,14 @@ from routes.usuarios import router as usuarios_router
 from routes.productos import router as productos_router
 
 load_dotenv(Path(__file__).parent / ".env")
+logger = logging.getLogger(__name__)
 
 Base.metadata.create_all(bind=engine)
 ensure_columns("productos", {
-    "categoria": "VARCHAR(30) NOT NULL DEFAULT 'other'",
-    "moneda": "VARCHAR(3) NOT NULL DEFAULT 'ARS'",
-    "condicion": "VARCHAR(20) NOT NULL DEFAULT 'new'",
-    "estado": "VARCHAR(20) NOT NULL DEFAULT 'published'",
+    "categoria": "ALTER TABLE productos ADD COLUMN categoria VARCHAR(30) NOT NULL DEFAULT 'other'",
+    "moneda": "ALTER TABLE productos ADD COLUMN moneda VARCHAR(3) NOT NULL DEFAULT 'ARS'",
+    "condicion": "ALTER TABLE productos ADD COLUMN condicion VARCHAR(20) NOT NULL DEFAULT 'new'",
+    "estado": "ALTER TABLE productos ADD COLUMN estado VARCHAR(20) NOT NULL DEFAULT 'published'",
 })
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -45,8 +47,8 @@ app.include_router(productos_router)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     body = exc.body.decode("utf-8") if isinstance(exc.body, bytes) else exc.body
     # Se corta el body: puede traer una imagen en base64 de varios MB.
-    print(f"[VALIDATION ERROR] path={request.url.path} body_recibido={str(body)[:300]}")
-    print(f"[VALIDATION ERROR] errores={str(exc.errors())[:500]}")
+    logger.warning("validation error path=%s body=%s", request.url.path, str(body)[:300])
+    logger.warning("validation error detalle=%s", str(exc.errors())[:500])
     return JSONResponse(status_code=422, content={"detail": jsonable_encoder(exc.errors())})
 
 

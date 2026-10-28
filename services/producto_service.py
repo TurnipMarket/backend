@@ -1,8 +1,9 @@
+from dataclasses import dataclass
 from decimal import Decimal
-
 from sqlalchemy.orm import Session, joinedload
 from models.producto import Producto
 from models.usuario import Usuario
+from pydantic import BaseModel, Field
 
 
 def listar_productos(db: Session) -> list[Producto]:
@@ -25,25 +26,26 @@ def listar_productos_de_usuario(db: Session, usuario_id: int) -> list[Producto]:
     )
 
 
-def crear_producto(
-    db: Session,
-    vendedor: Usuario,
-    titulo: str,
-    descripcion: str,
-    categoria: str,
-    precio: Decimal,
-    moneda: str,
-    condicion: str,
-    imagen_url: str | None,
-) -> Producto:
+@dataclass
+class NuevoProducto:
+    titulo: str
+    descripcion: str
+    categoria: str
+    precio: Decimal
+    moneda: str
+    condicion: str
+    imagen_url: str | None = None
+
+
+def crear_producto(db: Session, vendedor: Usuario, datos: NuevoProducto) -> Producto:
     producto = Producto(
-        nombre=titulo,
-        descripcion=descripcion,
-        categoria=categoria,
-        precio=precio,
-        moneda=moneda,
-        condicion=condicion,
-        imagen_url=imagen_url,
+        nombre=datos.titulo,
+        descripcion=datos.descripcion,
+        categoria=datos.categoria,
+        precio=datos.precio,
+        moneda=datos.moneda,
+        condicion=datos.condicion,
+        imagen_url=datos.imagen_url,
         estado="published",
         vendedor_id=vendedor.id,
     )

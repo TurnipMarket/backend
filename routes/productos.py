@@ -1,5 +1,4 @@
 from decimal import Decimal
-from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, ConfigDict, Field
@@ -10,6 +9,7 @@ from models.producto import Producto
 from models.usuario import Usuario
 from services.imagen_service import borrar_imagen, guardar_imagen
 from services.producto_service import (
+    NuevoProducto,
     crear_producto,
     listar_productos,
     listar_productos_de_usuario,
@@ -18,27 +18,24 @@ from utils.dependencies import get_current_user
 
 router = APIRouter(prefix="/api/products", tags=["products"])
 
-Categoria = Literal[
-    "electronics", "clothing", "home", "sports", "books", "vehicles", "services", "other"
-]
-Moneda = Literal["ARS", "USD", "UYU"]
-Condicion = Literal["new", "like_new", "good", "fair"]
+CATEGORIAS = r"^(electronics|clothing|home|sports|books|vehicles|services|other)$"
+MONEDAS = r"^(ARS|USD|UYU)$"
+CONDICIONES = r"^(new|like_new|good|fair)$"
 
 
 class ProductoCreate(BaseModel):
     """Mismos nombres y límites que el formulario del frontend (CreateProductPage)."""
 
-    model_config = ConfigDict(str_strip_whitespace=True)
+    model_config = {"str_strip_whitespace": True}
 
     title: str = Field(min_length=3, max_length=100)
     description: str = Field(min_length=10, max_length=2000)
-    category: Categoria = "other"
+    category: str = Field(default="other", pattern=CATEGORIAS)
     price: Decimal = Field(gt=0, le=999_999_999, max_digits=12, decimal_places=2)
-    currency: Moneda = "ARS"
-    condition: Condicion = "new"
+    currency: str = Field(default="ARS", pattern=MONEDAS)
+    condition: str = Field(default="new", pattern=CONDICIONES)
     # data URL o base64 de la foto (máx 5MB reales ≈ 7,0M de caracteres en base64).
     image: str | None = Field(default=None, max_length=7_200_000)
-
 
 def _url_imagen(p: Producto, request: Request) -> str | None:
     if not p.imagen_url:
@@ -82,6 +79,28 @@ def get_mis_productos(
     return {"products": [_serializar(p, request) for p in productos]}
 
 
+
+def _guardar_imagen_o_400(imagen: str | None) -> str | None:
+    if not imagen:
+        return None
+    try:
+        return guardar_imagen(imagen)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+def _a_nuevo_producto(req: ProductoCreate, imagen_url: str | None) -> NuevoProducto:
+    return NuevoProducto(
+        titulo=req.title,
+        descripcion=req.description,
+        categoria=req.category,
+        precio=req.price,
+        moneda=req.currency,
+        condicion=req.condition,
+        imagen_url=imagen_url,
+    )
+
+
 @router.post("", status_code=201)
 def post_producto(
     req: ProductoCreate,
@@ -89,25 +108,9 @@ def post_producto(
     usuario: Usuario = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    imagen_url = None
-    if req.image:
-        try:
-            imagen_url = guardar_imagen(req.image)
-        except ValueError as e:
-            raise HTTPException(status_code=400, detail=str(e))
-
+    imagen_url = _guardar_imagen_o_400(req.image)
     try:
-        producto = crear_producto(
-            db,
-            vendedor=usuario,
-            titulo=req.title,
-            descripcion=req.description,
-            categoria=req.category,
-            precio=req.price,
-            moneda=req.currency,
-            condicion=req.condition,
-            imagen_url=imagen_url,
-        )
+        producto = crear_producto(db, usuario, _a_nuevo_producto(req, imagen_url))
     except Exception:
         db.rollback()
         borrar_imagen(imagen_url)

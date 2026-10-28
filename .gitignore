@@ -5,4 +5,4 @@ database.db
 .venv/
 venv/
 .vscode/
-
+uploads/

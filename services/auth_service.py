@@ -1,5 +1,6 @@
 import re
 import random
+from dataclasses import dataclass
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 from models.usuario import Usuario
@@ -7,6 +8,12 @@ from utils.security import hash_password, verify_password
 from utils.email_sender import enviar_email
 
 CAMPOS_DISPONIBLES = {"username", "email"}
+@dataclass
+class DatosRegistro:
+    username: str
+    password: str
+    email: str | None = None
+    phone: str | None = None
 
 
 def _normalizar_username(username: str) -> str:
@@ -32,46 +39,47 @@ def _generar_alias(db: Session, base: str) -> str:
     return alias
 
 
-def registrar_usuario(
-    db: Session, username: str, email: str | None, phone: str | None, password: str
-) -> Usuario:
-    username = _normalizar_username(username)
+def _normalizar_datos(datos: DatosRegistro) -> tuple[str, str | None]:
+    username = _normalizar_username(datos.username)
     _validar_username(username)
-
+    email = datos.email.strip().lower() if datos.email else None
     if email:
-        email = email.strip().lower()
         _validar_email(email)
-        if db.query(Usuario).filter(Usuario.email == email).first():
-            raise ValueError("El email ya está registrado")
+    return username, email
 
+
+def _validar_unicidad(db: Session, username: str, email: str | None) -> None:
+    if email and db.query(Usuario).filter(Usuario.email == email).first():
+        raise ValueError("El email ya está registrado")
     if db.query(Usuario).filter(Usuario.username == username).first():
         raise ValueError("El nombre de usuario ya está en uso")
-    
-    if db.query(Usuario).filter(Usuario.email == email).first():
-        raise ValueError("El email ya está registrado")
 
-    hashed_password = hash_password(password)
 
+def _crear_usuario(db: Session, datos: DatosRegistro, username: str, email: str | None) -> Usuario:
     usuario = Usuario(
         nombre=username,
         username=username,
-        phone=phone,
+        phone=datos.phone,
         email=email,
-        password=hashed_password,
+        password=hash_password(datos.password),
         verificado=False,
         alias=_generar_alias(db, username),
     )
     db.add(usuario)
     db.commit()
     db.refresh(usuario)
+    return usuario
+
+
+def registrar_usuario(db: Session, datos: DatosRegistro) -> Usuario:
+    username, email = _normalizar_datos(datos)
+    _validar_unicidad(db, username, email)
+    usuario = _crear_usuario(db, datos, username, email)
 
     codigo = usuario.generar_nuevo_codigo()
     db.commit()
-
     _enviar_codigo(email, codigo)
-
     return usuario
-
 
 def _enviar_codigo(email: str, codigo: str) -> None:
     asunto = "Código de verificación - TurnipMarket"

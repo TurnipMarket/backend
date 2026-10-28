@@ -6,8 +6,10 @@ y compara con variantes más livianas para encontrar el balance
 óptimo entre seguridad y tiempo de respuesta.
 """
 import time
-from argon2 import PasswordHasher
 
+import pytest
+from argon2 import PasswordHasher
+from argon2.exceptions import VerifyMismatchError
 
 PARAMS_CONFIGS = {
     "OWASP Recomendado (production)": {"time_cost": 3, "memory_cost": 65536, "parallelism": 4},
@@ -50,18 +52,41 @@ def benchmark_verify(ph: PasswordHasher, password: str, stored_hash: str, iterat
     return {"avg_ms": round(avg_ms, 2), "min_ms": round(min_ms, 2), "max_ms": round(max_ms, 2), "valid": result}
 
 
+def _imprimir_config(config_name: str, params: dict) -> None:
+    print(f"\n{'─' * 80}")
+    print(f"Configuración: {config_name}")
+    print(f"  time_cost={params['time_cost']}, memory_cost={params['memory_cost']}KB"
+          f" ({params['memory_cost'] // 1024}MB), parallelism={params['parallelism']}")
+    print(f"{'─' * 80}")
+
+
+def _benchmark_password(ph: PasswordHasher, pwd: str) -> None:
+    print(f"\n  Contraseña: {'*' * len(pwd) if len(pwd) > 3 else pwd}")
+    hash_result = benchmark_hash(ph, pwd)
+    verify_result = benchmark_verify(ph, pwd, hash_result["hash"])
+    print(f"    Hash:     avg={hash_result['avg_ms']}ms  "
+          f"min={hash_result['min_ms']}ms  max={hash_result['max_ms']}ms")
+    print(f"    Verify:   avg={verify_result['avg_ms']}ms  "
+          f"min={verify_result['min_ms']}ms  max={verify_result['max_ms']}ms")
+    print(f"    Hash len: {len(hash_result['hash'])} chars")
+
+
+def _imprimir_recomendacion() -> None:
+    print(f"\n{'=' * 80}")
+    print("RECOMENDACIÓN: OWASP Recomendado (time_cost=3, memory=64MB, parallelism=4)")
+    print("  - Balance óptimo entre seguridad y rendimiento")
+    print("  - Tiempo de hash ~200-500ms (aceptable para registro/login)")
+    print("  - Resistente a ataques GPU/ASIC y side-channel")
+    print(f"{'=' * 80}")
+
+
 def run_benchmarks():
     print("=" * 80)
     print("BENCHMARK DE ARGON2ID - PARÁMETROS OWASP")
     print("=" * 80)
 
     for config_name, params in PARAMS_CONFIGS.items():
-        print(f"\n{'─' * 80}")
-        print(f"Configuración: {config_name}")
-        print(f"  time_cost={params['time_cost']}, memory_cost={params['memory_cost']}KB"
-              f" ({params['memory_cost'] // 1024}MB), parallelism={params['parallelism']}")
-        print(f"{'─' * 80}")
-
+        _imprimir_config(config_name, params)
         ph = PasswordHasher(
             time_cost=params["time_cost"],
             memory_cost=params["memory_cost"],
@@ -69,23 +94,19 @@ def run_benchmarks():
             hash_len=32,
             salt_len=16,
         )
-
         for pwd in TEST_PASSWORDS:
-            print(f"\n  Contraseña: {'*' * len(pwd) if len(pwd) > 3 else pwd}")
-            hash_result = benchmark_hash(ph, pwd)
-            verify_result = benchmark_verify(ph, pwd, hash_result["hash"])
-            print(f"    Hash:     avg={hash_result['avg_ms']}ms  "
-                  f"min={hash_result['min_ms']}ms  max={hash_result['max_ms']}ms")
-            print(f"    Verify:   avg={verify_result['avg_ms']}ms  "
-                  f"min={verify_result['min_ms']}ms  max={verify_result['max_ms']}ms")
-            print(f"    Hash len: {len(hash_result['hash'])} chars")
+            _benchmark_password(ph, pwd)
 
-    print(f"\n{'=' * 80}")
-    print("RECOMENDACIÓN: OWASP Recomendado (time_cost=3, memory=64MB, parallelism=4)")
-    print("  - Balance óptimo entre seguridad y rendimiento")
-    print("  - Tiempo de hash ~200-500ms (aceptable para registro/login)")
-    print("  - Resistente a ataques GPU/ASIC y side-channel")
-    print(f"{'=' * 80}")
+    _imprimir_recomendacion()
+
+
+def test_hash_y_verify_con_config_liviana():
+    """Test real (rápido): el hash verifica y una clave distinta no."""
+    ph = PasswordHasher(time_cost=1, memory_cost=8, parallelism=1)
+    resultado = benchmark_hash(ph, "Clave123!", iterations=1)
+    assert benchmark_verify(ph, "Clave123!", resultado["hash"], iterations=1)["valid"] is True
+    with pytest.raises(VerifyMismatchError):
+        ph.verify(resultado["hash"], "otra")
 
 
 if __name__ == "__main__":

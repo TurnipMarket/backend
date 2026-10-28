@@ -1,18 +1,21 @@
+
 services:
-  backend:
-    build: .
-    container_name: turnip-backend
-    ports:
-      - "5000:5000"
-    env_file:
-      - .env
+  mysql:
+    image: mysql:8.0
+    container_name: mi_mysql
+    restart: always
     environment:
-      # La base SQLite y las fotos de productos (data/uploads) viven en el volumen.
-      # El código lee DATABASE_PATH (no DATABASE_URL).
-      - DATABASE_PATH=/app/data/turnip.db
+      MYSQL_ROOT_PASSWORD: mi_password_super_seguro
+      MYSQL_DATABASE: mi_base_de_datos
+      MYSQL_USER: mi_usuario
+      MYSQL_PASSWORD: mi_password_usuario
+    ports:
+      - "3306:3306"
     volumes:
-      - turnip_data:/app/data
-    restart: unless-stopped
+      - mysql_data:/var/lib/mysql
+      # Opcional: Si quieres cargar un script SQL inicial al crear el contenedor
+      # - ./init.sql:/docker-entrypoint-initdb.d/init.sql 
 
 volumes:
-  turnip_data:
+  mysql_data:
+    driver: local

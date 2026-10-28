@@ -1,63 +1,71 @@
+import logging
 import os
 import smtplib
 import ssl
-from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
 from dotenv import load_dotenv
- 
+
 load_dotenv()
- 
-SMTP_HOST = os.getenv("SMTP_HOST")
-SMTP_PORT = int(os.getenv("SMTP_PORT", 465))
-SMTP_USER = os.getenv("SMTP_USER")
-SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
-SMTP_FROM_NAME = os.getenv("SMTP_FROM_NAME", "TurnipMarket")
- 
- 
+
+logger = logging.getLogger(__name__)
+
+
+def _config() -> dict:
+    return {
+        "host": os.getenv("SMTP_HOST"),
+        "port": int(os.getenv("SMTP_PORT", 465)),
+        "user": os.getenv("SMTP_USER"),
+        "password": os.getenv("SMTP_PASSWORD"),
+        "from_name": os.getenv("SMTP_FROM_NAME", "TurnipMarket"),
+    }
+
+
+def _armar_mensaje(remitente: str, from_name: str, destino: str, asunto: str, html: str):
+    mensaje = MIMEMultipart("alternative")
+    mensaje["Subject"] = asunto
+    mensaje["From"] = f"{from_name} <{remitente}>"
+    mensaje["To"] = destino
+    mensaje.attach(MIMEText(html, "html"))
+    return mensaje
+
+
 class EmailService:
-    """Encapsula la lógica de conexión y envío de correos por SMTP."""
- 
+    """Envía correos por SMTP. La configuración se lee del entorno al crearlo."""
+
     def __init__(self):
-        if not all([SMTP_HOST, SMTP_USER, SMTP_PASSWORD]):
-            raise ValueError(
-                "Faltan variables de entorno SMTP. Revisá tu archivo .env"
-            )
-        self.host = SMTP_HOST
-        self.port = SMTP_PORT
-        self.user = SMTP_USER
-        self.password = SMTP_PASSWORD
- 
+        self.cfg = _config()
+        if not all(self.cfg[k] for k in ("host", "user", "password")):
+            raise ValueError("Faltan variables de entorno SMTP. Revisá tu archivo .env")
+
     def send_email(self, to_email: str, subject: str, html_content: str) -> bool:
-        """
-        Envía un correo HTML a un destinatario.
-        Devuelve True si se envió correctamente, False si hubo un error.
-        """
-        message = MIMEMultipart("alternative")
-        message["Subject"] = subject
-        message["From"] = f"{SMTP_FROM_NAME} <{self.user}>"
-        message["To"] = to_email
- 
-        part_html = MIMEText(html_content, "html")
-        message.attach(part_html)
- 
-        context = ssl.create_default_context()
- 
+        """Devuelve True si se envió, False si hubo un error."""
+        cfg = self.cfg
+        mensaje = _armar_mensaje(cfg["user"], cfg["from_name"], to_email, subject, html_content)
         try:
             # Puerto 465 -> conexión SSL directa (recomendado con Gmail)
-            with smtplib.SMTP_SSL(self.host, self.port, context=context) as server:
-                server.login(self.user, self.password)
-                server.sendmail(self.user, to_email, message.as_string())
+            with smtplib.SMTP_SSL(cfg["host"], cfg["port"], context=ssl.create_default_context()) as server:
+                server.login(cfg["user"], cfg["password"])
+                server.sendmail(cfg["user"], to_email, mensaje.as_string())
             return True
         except smtplib.SMTPAuthenticationError:
-            print("Error de autenticación: revisá usuario/contraseña de aplicación.")
-            return False
-        except Exception as e:
-            print(f"Error al enviar el correo: {e}")
-            return False
- 
- 
-email_service = EmailService()
+            logger.error("Error de autenticación SMTP: revisá usuario/contraseña de aplicación.")
+        except Exception:
+            logger.exception("Error al enviar el correo")
+        return False
+
+
+_email_service: EmailService | None = None
+
+
+def _get_service() -> EmailService:
+    """Crea el servicio recién al primer envío (no al importar el módulo)."""
+    global _email_service
+    if _email_service is None:
+        _email_service = EmailService()
+    return _email_service
 
 
 def enviar_email(to_email: str, subject: str, html_content: str) -> bool:
-    return email_service.send_email(to_email, subject, html_content)
+    return _get_service().send_email(to_email, subject, html_content)

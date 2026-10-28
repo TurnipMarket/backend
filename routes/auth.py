@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from database.connection import get_db
 from utils.auth_token import crear_token
 from services.auth_service import (
+    DatosRegistro,
     registrar_usuario,
     login_usuario,
     verificar_disponibilidad,
@@ -49,7 +50,10 @@ class ReenviarRequest(BaseModel):
 @router.post("/register", status_code=201)
 def register(req: RegistroRequest, db: Session = Depends(get_db)):
     try:
-        usuario = registrar_usuario(db, req.username, req.email, req.phone, req.password)
+        usuario = registrar_usuario(
+            db,
+            DatosRegistro(username=req.username, password=req.password, email=req.email, phone=req.phone),
+        )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     return {

@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from sqlalchemy import Column, Integer, String, Numeric, DateTime, ForeignKey, Text
+from sqlalchemy import Column, Integer, String, Numeric, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from database.connection import Base
 
@@ -13,7 +13,7 @@ class Producto(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     nombre = Column(String(150), nullable=False)
-    descripcion = Column(Text, nullable=True)
+    descripcion = Column(String(2000), nullable=True)
     precio = Column(Numeric(12, 2), nullable=False)
     imagen_url = Column(String(500), nullable=True)
     categoria = Column(String(30), nullable=False, default="other", server_default="other")

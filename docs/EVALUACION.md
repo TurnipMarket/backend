@@ -3,23 +3,23 @@
 
 > Documento **generado automáticamente** por la cátedra de Programación III (RepoSense + análisis de calidad + constancia). **No editar a mano**: se regenera en cada evaluación.
 > Rama evaluada: `main`. Análisis **heurístico** (regex + métricas): es una criba para orientar la revisión, **no una nota**.
-> Generado: 2026-11-03.
+> Generado: 2026-11-05.
 
 ## 1. Veredicto
 
 | Aspecto | Resultado |
 |---|---|
 | Tipo de proyecto | backend |
-| Índice de calidad de servicios | **60/100** (mínimo 60) |
-| Criterios cumplidos | **14/15** |
+| Índice de calidad de servicios | **91/100** (mínimo 50) |
+| Criterios cumplidos | **13/15** |
 | Aprobado (semáforo) | **NO** |
-| Código (LOC) | 1,151 |
-| Archivos de código | 24 |
+| Código (LOC) | 766 |
+| Archivos de código | 17 |
 | Tests (archivos) | 7 |
 | Cobertura de líneas | no medible (mínimo 80%) |
 | Capas detectadas | presentacion, logica, datos |
 
-> **Aprobado** exige cumplir **todos** los criterios del semáforo. No es una nota: sirve para ordenar y priorizar la revisión.
+> **Aprobado** exige las compuertas críticas (**SEC**, **SQL**, **capas**, **índice ≥ 50** y **cobertura ≥ 80 %** cuando aplica) y tolera hasta **3 criterios en rojo** (12/15). No es una nota: sirve para ordenar y priorizar la revisión.
 
 ## 2. Autoría (RepoSense)
 
@@ -35,7 +35,7 @@
 
 | Alumno | Sesiones | Cumplimiento | Pausa | Recencia | IC | Nivel | Para subir de nivel |
 |---|--:|--:|--:|--:|--:|--|--|
-| matiblancooo | 7 | 32% | 21 d | 93% | **34** | No aprueba | Cumplimiento 32% (mín. 50%); Pausa 21 d (máx. 10 d) |
+| matiblancooo | 7 | 29% | 21 d | 43% | **25** | No aprueba | Cumplimiento 29% (mín. 50%); Recencia 43% (mín. 50%) |
 
 > Para aprobar el IC: **2 sesiones por semana** sostenidas, sin pausas mayores a **10 días** y con actividad en las **últimas 2 semanas**. Se excluyen merges, bots y al docente. Zona horaria UTC-3.
 
@@ -47,13 +47,13 @@ Cada aspecto indica **qué mide**, **por qué importa** y **tu resultado**. Cuan
 
 - **Qué mide:** Un resumen numérico (0-100) que combina todas las señales y métricas del análisis, con topes duros por duplicación.
 - **Por qué importa:** Ordena y prioriza la revisión: un índice bajo indica varias señales que conviene mirar juntas.
-- **Tu resultado:** índice **60/100** _(mínimo 60)_
+- **Tu resultado:** índice **91/100** _(mínimo 50)_
 
 ### 2. Duplicación (DRY) (duplicacion) — OK
 
 - **Qué mide:** Porcentaje de bloques de código repetidos (similitud) en el repositorio.
 - **Por qué importa:** Cada copia se mantiene por separado: un arreglo hay que repetirlo y los defectos se multiplican.
-- **Tu resultado:** **1.1%** de duplicación _(máximo 15%)_
+- **Tu resultado:** **0.0%** de duplicación _(máximo 15%)_
 
 ### 3. Secretos hardcodeados (SEC) — OK
 
@@ -107,7 +107,7 @@ Cada aspecto indica **qué mide**, **por qué importa** y **tu resultado**. Cuan
 
 - **Qué mide:** Complejidad ciclomática: cantidad de caminos posibles dentro de una función (condicionales, bucles, casos).
 - **Por qué importa:** Muchos caminos = difícil de seguir y de probar; suelen esconderse casos sin cubrir.
-- **Tu resultado:** **1** bloque(s) de complejidad alta _(máximo 5 por 1000 LOC (tenés 1151 LOC))_
+- **Tu resultado:** **0** bloque(s) de complejidad alta _(máximo 5 por 1000 LOC (tenés 766 LOC))_
 
 ### 12. Funciones/métodos largos o con muchos parámetros (Tam) — OK
 
@@ -115,11 +115,15 @@ Cada aspecto indica **qué mide**, **por qué importa** y **tu resultado**. Cuan
 - **Por qué importa:** Una función que hace varias cosas cuesta leerla, nombrarla y reutilizarla.
 - **Tu resultado:** **1** función/método(s) largos o con muchos parámetros _(máximo 10 por 1000 LOC)_
 
-### 13. Acoplamiento alto (Acop) — OK
+### 13. Acoplamiento alto (Acop) — A REVISAR
 
 - **Qué mide:** Cuánto depende una unidad de las partes internas de otra.
 - **Por qué importa:** Piezas muy enlazadas hacen que un cambio se propague y que sea difícil reemplazar partes.
 - **Tu resultado:** **2** unidad(es) con acoplamiento alto _(máximo 2 por 1000 LOC)_
+- **Para investigar la causa:**
+    - ¿Las piezas se conocen en detalle entre sí (acceden a campos o estructuras internas)?
+    - ¿El acceso a datos ocurre desde lugares que no son los responsables?
+    - ¿Se puede cambiar una parte sin tocar las demás?
 
 ### 14. Cobertura de tests (Cob) — A REVISAR
 
@@ -135,21 +139,26 @@ Cada aspecto indica **qué mide**, **por qué importa** y **tu resultado**. Cuan
 
 - **Qué mide:** Cantidad de endpoints (rutas HTTP) expuestos por el backend.
 - **Por qué importa:** El backend se mide por lo que expone: pocos endpoints sugiere poca funcionalidad de servicio.
-- **Tu resultado:** **22** endpoint(s) _(mínimo 10)_
+- **Tu resultado:** **22** endpoint(s) _(mínimo 5)_
 
-## 5. Qué falta para aprobar
+## 5. Observaciones y qué falta
 
 Criterios que hoy están en rojo y, para cada uno, una explicación breve de **cómo corregirlo** hasta alcanzar el nivel de aprobación (perfil `exigente`):
 
-| Criterio | Resultado actual | Meta | Cómo corregirlo |
-|---|---|---|---|
-| Cobertura de tests (Cob) | **no medible** (sin tests, sin runner o sin artefacto de cobertura) | mínimo 80% de líneas | Agregá o ampliá tests que ejecuten los módulos sin cubrir (camino principal y errores) y publicá el artefacto (`coverage/lcov.info`, `coverage-summary.json`, `coverage.xml` o `coverage.json`) o corré la suite con coverage. Meta: ≥80% de líneas. |
+| Criterio | Resultado actual | Meta | Brecha | Cómo alcanzarlo |
+|---|---|---|---|---|
+| Acoplamiento alto (Acop) | **2** unidad(es) con acoplamiento alto | máximo 2 por 1000 LOC | 2 hallazgo(s); el máximo para 766 LOC es 1.5 | Hacé que cada unidad dependa de una interfaz o de un módulo de servicio, no de los detalles internos de otra; evitá acceder a campos ajenos. Meta: ≤2 por 1000 LOC. |
+| Cobertura de tests (Cob) | **no medible** (sin tests, sin runner o sin artefacto de cobertura) | mínimo 80% de líneas | no medible: generá el artefacto o corré la suite | Agregá o ampliá tests que ejecuten los módulos sin cubrir (camino principal y errores) y publicá el artefacto (`coverage/lcov.info`, `coverage-summary.json`, `coverage.xml` o `coverage.json`) o corré la suite con coverage. Meta: ≥80% de líneas. |
 
 > Empezá por las señales de seguridad (**SEC**, **SQL**) y por la **duplicación**: son las que más pesan en el índice y las más rápidas de verificar a ojo. Después de corregir, volvé a correr la medición: el semáforo se recalcula sobre `main`.
 
 ## 6. Anexo: dónde mirar
 
 Archivos donde el análisis encontró cada señal en rojo (sin número de línea, a propósito):
+
+**Acoplamiento alto (Acop)** — 2 archivo(s):
+- `routes/productos.py`
+- `utils/email_sender.py`
 
 ---
 _Informe generado por la cátedra. Los umbrales corresponden al perfil `exigente`. Ante dudas, revisá el archivo señalado y el criterio en `CRITERIOS-CALIDAD.md`._

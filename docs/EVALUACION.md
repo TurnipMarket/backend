@@ -155,7 +155,71 @@ Criterios que hoy están en rojo y, para cada uno, una explicación breve de **c
 
 > Empezá por las señales de seguridad (**SEC**, **SQL**) y por la **duplicación**: son las que más pesan en el índice y las más rápidas de verificar a ojo. Después de corregir, volvé a correr la medición: el semáforo se recalcula sobre `main`.
 
-## 6. Anexo: dónde mirar
+## 6. Actividad en clase (miércoles y viernes)
+
+> Se consideran las **23 clases** del período (miércoles y viernes; Nov 4 y 6 quedan afuera porque el calendario las marca sin clase). `Commits` = commits de trabajo (no-merge); `Merges` = merges de PR (también son push). Los días sin actividad dicen **sin actividad**.
+
+### Candelaetec
+
+**13/23 clases con actividad** · 14 commits · 9 merges
+
+| Fecha | Marca | Repositorios | Commits / merges |
+|---|:--:|---|--:|
+| 2026-08-14 | No | sin actividad | 0 / 0 |
+| 2026-08-19 | **Sí** | frontend | 1 / 0 |
+| 2026-08-21 | **Sí** | frontend | 1 / 0 |
+| 2026-08-26 | **Sí** | frontend | 1 / 0 |
+| 2026-08-28 | No | sin actividad | 0 / 0 |
+| 2026-09-02 | **Sí** | frontend | 2 / 0 |
+| 2026-09-04 | **Sí** | frontend | 0 / 1 |
+| 2026-09-09 | No | sin actividad | 0 / 0 |
+| 2026-09-11 | No | sin actividad | 0 / 0 |
+| 2026-09-16 | No | sin actividad | 0 / 0 |
+| 2026-09-18 | No | sin actividad | 0 / 0 |
+| 2026-09-23 | No | sin actividad | 0 / 0 |
+| 2026-09-25 | **Sí** | frontend | 1 / 1 |
+| 2026-09-30 | No | sin actividad | 0 / 0 |
+| 2026-10-02 | No | sin actividad | 0 / 0 |
+| 2026-10-07 | **Sí** | frontend | 1 / 1 |
+| 2026-10-09 | **Sí** | frontend | 1 / 1 |
+| 2026-10-14 | **Sí** | frontend | 1 / 1 |
+| 2026-10-16 | **Sí** | frontend | 2 / 1 |
+| 2026-10-21 | No | sin actividad | 0 / 0 |
+| 2026-10-23 | **Sí** | frontend | 1 / 1 |
+| 2026-10-28 | **Sí** | frontend | 1 / 1 |
+| 2026-10-30 | **Sí** | frontend | 1 / 1 |
+
+### matiblancooo
+
+**7/23 clases con actividad** · 9 commits · 7 merges
+
+| Fecha | Marca | Repositorios | Commits / merges |
+|---|:--:|---|--:|
+| 2026-08-14 | No | sin actividad | 0 / 0 |
+| 2026-08-19 | **Sí** | backend | 1 / 0 |
+| 2026-08-21 | No | sin actividad | 0 / 0 |
+| 2026-08-26 | No | sin actividad | 0 / 0 |
+| 2026-08-28 | **Sí** | backend | 3 / 2 |
+| 2026-09-02 | No | sin actividad | 0 / 0 |
+| 2026-09-04 | No | sin actividad | 0 / 0 |
+| 2026-09-09 | **Sí** | backend | 1 / 1 |
+| 2026-09-11 | No | sin actividad | 0 / 0 |
+| 2026-09-16 | No | sin actividad | 0 / 0 |
+| 2026-09-18 | No | sin actividad | 0 / 0 |
+| 2026-09-23 | No | sin actividad | 0 / 0 |
+| 2026-09-25 | No | sin actividad | 0 / 0 |
+| 2026-09-30 | **Sí** | backend | 1 / 1 |
+| 2026-10-02 | No | sin actividad | 0 / 0 |
+| 2026-10-07 | **Sí** | backend | 1 / 1 |
+| 2026-10-09 | **Sí** | backend | 1 / 1 |
+| 2026-10-14 | No | sin actividad | 0 / 0 |
+| 2026-10-16 | No | sin actividad | 0 / 0 |
+| 2026-10-21 | No | sin actividad | 0 / 0 |
+| 2026-10-23 | No | sin actividad | 0 / 0 |
+| 2026-10-28 | **Sí** | backend | 1 / 1 |
+| 2026-10-30 | No | sin actividad | 0 / 0 |
+
+## 7. Anexo: dónde mirar
 
 Archivos donde el análisis encontró cada señal en rojo (sin número de línea, a propósito):
 

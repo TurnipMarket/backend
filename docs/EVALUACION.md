@@ -18,6 +18,9 @@
 | Tests (archivos) | 7 |
 | Cobertura de líneas | 68.8% (mínimo 80%) |
 | Capas detectadas | presentacion, logica, datos |
+| Pushes directos a `main` (sin PR) | 2 |
+
+> **Pushes directos:** se detectaron **2** commit(s) a `main` que no pasaron por un Pull Request. El flujo esperado es **rama → PR → revisión → merge**; el PR se aprueba con el mensaje `Aprobado`. Evitá pushear directo a `main`: la ruleset lo bloquea y el commit directo queda auditado.
 
 > **Aprobado** exige las compuertas críticas (**SEC**, **SQL**, **capas**, **índice ≥ 50** y **cobertura ≥ 80 %** cuando aplica) y tolera hasta **3 criterios en rojo** (12/15). No es una nota: sirve para ordenar y priorizar la revisión.
 

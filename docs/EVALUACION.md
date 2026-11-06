@@ -3,7 +3,7 @@
 
 > Documento **generado automáticamente** por la cátedra de Programación III (RepoSense + análisis de calidad + constancia). **No editar a mano**: se regenera en cada evaluación.
 > Rama evaluada: `main`. Análisis **heurístico** (regex + métricas): es una criba para orientar la revisión, **no una nota**.
-> Generado: 2026-11-05.
+> Generado: 2026-11-06.
 
 ## 1. Veredicto
 
@@ -16,7 +16,7 @@
 | Código (LOC) | 766 |
 | Archivos de código | 17 |
 | Tests (archivos) | 7 |
-| Cobertura de líneas | no medible (mínimo 80%) |
+| Cobertura de líneas | 68.8% (mínimo 80%) |
 | Capas detectadas | presentacion, logica, datos |
 
 > **Aprobado** exige las compuertas críticas (**SEC**, **SQL**, **capas**, **índice ≥ 50** y **cobertura ≥ 80 %** cuando aplica) y tolera hasta **3 criterios en rojo** (12/15). No es una nota: sirve para ordenar y priorizar la revisión.
@@ -129,7 +129,7 @@ Cada aspecto indica **qué mide**, **por qué importa** y **tu resultado**. Cuan
 
 - **Qué mide:** Porcentaje de líneas de código ejecutadas por la suite de tests (cobertura real, no cantidad de archivos de test).
 - **Por qué importa:** Un test que existe pero no ejecuta el código no protege de nada: la cobertura muestra qué partes quedan sin verificar.
-- **Tu resultado:** **no medible** (sin tests, sin runner o sin artefacto de cobertura) _(mínimo 80% de líneas)_
+- **Tu resultado:** **68.8%** de líneas cubiertas · fuente: ejecución: pytest (aviso: requirements.txt: sin instalar 16 línea(s) (no disponibles o en conflicto: bcc==0.35.0, Brlapi==0.8.6, command…) _(mínimo 80% de líneas)_
 - **Para investigar la causa:**
     - ¿Qué módulos o ramas del sistema nunca se ejecutan en los tests?
     - ¿Los tests prueban el camino principal y los errores, o solo el caso feliz?
@@ -148,7 +148,7 @@ Criterios que hoy están en rojo y, para cada uno, una explicación breve de **c
 | Criterio | Resultado actual | Meta | Brecha | Cómo alcanzarlo |
 |---|---|---|---|---|
 | Acoplamiento alto (Acop) | **2** unidad(es) con acoplamiento alto | máximo 2 por 1000 LOC | 2 hallazgo(s); el máximo para 766 LOC es 1.5 | Hacé que cada unidad dependa de una interfaz o de un módulo de servicio, no de los detalles internos de otra; evitá acceder a campos ajenos. Meta: ≤2 por 1000 LOC. |
-| Cobertura de tests (Cob) | **no medible** (sin tests, sin runner o sin artefacto de cobertura) | mínimo 80% de líneas | no medible: generá el artefacto o corré la suite | Agregá o ampliá tests que ejecuten los módulos sin cubrir (camino principal y errores) y publicá el artefacto (`coverage/lcov.info`, `coverage-summary.json`, `coverage.xml` o `coverage.json`) o corré la suite con coverage. Meta: ≥80% de líneas. |
+| Cobertura de tests (Cob) | **68.8%** de líneas cubiertas · fuente: ejecución: pytest (aviso: requirements.txt: sin instalar 16 línea(s) (no disponibles o en conflicto: bcc==0.35.0, Brlapi==0.8.6, command…) | mínimo 80% de líneas | faltan 11.2 pts | Agregá o ampliá tests que ejecuten los módulos sin cubrir (camino principal y errores) y publicá el artefacto (`coverage/lcov.info`, `coverage-summary.json`, `coverage.xml` o `coverage.json`) o corré la suite con coverage. Meta: ≥80% de líneas. |
 
 > Empezá por las señales de seguridad (**SEC**, **SQL**) y por la **duplicación**: son las que más pesan en el índice y las más rápidas de verificar a ojo. Después de corregir, volvé a correr la medición: el semáforo se recalcula sobre `main`.
 

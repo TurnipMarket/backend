@@ -160,11 +160,11 @@ Criterios que hoy están en rojo y, para cada uno, una explicación breve de **c
 
 ## 6. Actividad en clase (miércoles y viernes)
 
-> Se consideran las **23 clases** del período (miércoles y viernes, según `config/constancia.json`; feriados y semanas sin clase descontados). `Commits` = commits de trabajo (no-merge); `Merges` = merges de PR (también son push). Los días sin actividad dicen **sin actividad**.
+> Se consideran las **26 clases** del período (miércoles y viernes, según `config/constancia.json`; feriados y semanas sin clase descontados). `Commits` = commits de trabajo (no-merge); `Merges` = merges de PR (también son push). Los días sin actividad dicen **sin actividad**.
 
 ### Candelaetec
 
-**13/23 clases con actividad** · 14 commits · 9 merges
+**14/26 clases con actividad** · 15 commits · 10 merges
 
 | Fecha | Actividad | Repositorios | Commits / merges |
 |---|:--:|---|--:|
@@ -191,10 +191,13 @@ Criterios que hoy están en rojo y, para cada uno, una explicación breve de **c
 | 2026-10-23 | **Sí** | frontend | 1 / 1 |
 | 2026-10-28 | **Sí** | frontend | 1 / 1 |
 | 2026-10-30 | **Sí** | frontend | 1 / 1 |
+| 2026-11-04 | No | sin actividad | 0 / 0 |
+| 2026-11-06 | No | sin actividad | 0 / 0 |
+| 2026-11-11 | **Sí** | frontend | 1 / 1 |
 
 ### matiblancooo
 
-**7/23 clases con actividad** · 9 commits · 7 merges
+**7/26 clases con actividad** · 9 commits · 7 merges
 
 | Fecha | Actividad | Repositorios | Commits / merges |
 |---|:--:|---|--:|
@@ -221,6 +224,9 @@ Criterios que hoy están en rojo y, para cada uno, una explicación breve de **c
 | 2026-10-23 | No | sin actividad | 0 / 0 |
 | 2026-10-28 | **Sí** | backend | 1 / 1 |
 | 2026-10-30 | No | sin actividad | 0 / 0 |
+| 2026-11-04 | No | sin actividad | 0 / 0 |
+| 2026-11-06 | No | sin actividad | 0 / 0 |
+| 2026-11-11 | No | sin actividad | 0 / 0 |
 
 ## 7. Anexo: dónde mirar
 

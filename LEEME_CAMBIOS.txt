@@ -1,0 +1,31 @@
+TURNIPMARKET BACKEND - VERSION FINAL
+Este zip trae el proyecto COMPLETO: los archivos que cambiaron y los que no.
+
+ARCHIVOS CON CAMBIOS (4)
+  database/connection.py        Activa las claves foráneas de SQLite (PRAGMA foreign_keys=ON).
+  models/producto.py            Agrega CHECK (precio, moneda, categoría, condición, estado)
+                                y ON DELETE RESTRICT en vendedor_id.
+  services/producto_service.py  Agrega actualizar_producto y dar_de_baja_producto (solo el dueño).
+                                "Mis productos" ya no muestra los dados de baja.
+  routes/productos.py           Agrega PUT /api/products/{id}, PATCH /api/products/{id}/status
+                                y DELETE /api/products/{id}.
+
+ARCHIVOS NUEVOS
+  tests/test_productos_crud.py  22 tests de editar, pausar, borrar y de las restricciones de la base.
+  sql_ejemplos/                 Scripts de ejemplo para mostrar el diseño (NO los usa el backend):
+                                  turnipmarket_sqlite.sql  -> se corre en sqliteonline.com o DB Browser
+                                  turnipmarket_mysql.sql   -> para MySQL Workbench (MySQL 8.0.16+)
+
+ARCHIVOS SIN CAMBIOS
+  Todo lo demás (main.py, auth, usuarios, imágenes, tests viejos, Docker, etc.) está igual que en tu repo.
+
+COMO PROBARLO
+  1. Definí las variables de entorno SMTP_HOST, SMTP_USER, SMTP_PASSWORD y JWT_SECRET (mínimo 32 caracteres).
+  2. pip install -r requirements.txt   (ojo: ese archivo trae paquetes del sistema que conviene sacar)
+  3. python -m pytest tests -q         -> resultado esperado: 39 passed
+  4. uvicorn main:app --host 0.0.0.0 --port 5000 --reload
+
+OJO CON LA BASE VIEJA
+  Los CHECK solo valen en bases NUEVAS. Para verlos: cerrá el backend, renombrá database.db
+  y volvé a levantarlo (se crea de nuevo; se pierden los datos de prueba).
+  El PRAGMA de claves foráneas funciona con cualquier base.

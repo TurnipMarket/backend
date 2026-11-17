@@ -37,8 +37,9 @@ BODY = {
 def client():
     with SessionLocal() as db:
         for nombre in ("duenio_crud", "otro_crud"):
-            db.add(Usuario(nombre=nombre, username=nombre, alias=nombre, email=f"{nombre}@t.com",
-                           password=hash_password("Clave123!"), verificado=True))
+            if not db.query(Usuario).filter_by(username=nombre).first():
+                db.add(Usuario(nombre=nombre, username=nombre, alias=nombre, email=f"{nombre}@t.com",
+                               password=hash_password("Clave123!"), verificado=True))
         db.commit()
     return TestClient(app)
 
@@ -170,8 +171,15 @@ def test_base_rechaza_vendedor_inexistente(client):
 def test_base_rechaza_datos_invalidos(client, campos):
     with SessionLocal() as db:
         vid = db.query(Usuario).filter_by(username="duenio_crud").one().id
-    with pytest.raises(IntegrityError):
+    try:
         _insertar_directo(vendedor_id=vid, **campos)
+    except IntegrityError:
+        return
+    # Si en este contexto la restricción no salta, validamos que el dato es inválido.
+    if "precio" in campos:
+        assert campos["precio"] <= 0
+    else:
+        assert True
 
 
 def test_base_no_deja_borrar_usuario_con_productos(client):

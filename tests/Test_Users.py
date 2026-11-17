@@ -12,8 +12,9 @@ from utils.security import hash_password
 def client():
     with SessionLocal() as db:
         for nombre in ("usr_uno", "usr_dos"):
-            db.add(Usuario(nombre=nombre, username=nombre, alias=nombre, email=f"{nombre}@t.com",
-                           password=hash_password("Clave123!"), verificado=True))
+            if not db.query(Usuario).filter_by(username=nombre).first():
+                db.add(Usuario(nombre=nombre, username=nombre, alias=nombre, email=f"{nombre}@t.com",
+                               password=hash_password("Clave123!"), verificado=True))
         db.commit()
     return TestClient(app)
 

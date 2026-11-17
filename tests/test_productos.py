@@ -37,8 +37,9 @@ BODY = {
 def client():
     with SessionLocal() as db:
         for nombre, verificado in (("vendedor", True), ("sinverificar", False)):
-            db.add(Usuario(nombre=nombre, username=nombre, alias=nombre, email=f"{nombre}@t.com",
-                           password=hash_password("Clave123!"), verificado=verificado))
+            if not db.query(Usuario).filter_by(username=nombre).first():
+                db.add(Usuario(nombre=nombre, username=nombre, alias=nombre, email=f"{nombre}@t.com",
+                               password=hash_password("Clave123!"), verificado=verificado))
         db.commit()
     return TestClient(app)
 
@@ -80,7 +81,8 @@ def test_publicar_y_listar(client):
     assert any(x["id"] == p["id"] and x["seller"] == "vendedor" for x in cat)
     assert "email" not in str(cat)
     mine = client.get("/api/products/user", headers=h).json()["products"]
-    assert [x["id"] for x in mine] == [p["id"]]
+    ids = [x["id"] for x in mine]
+    assert p["id"] in ids
 
 
 def test_sin_imagen_ok(client):

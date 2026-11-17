@@ -22,12 +22,12 @@ def _config() -> dict:
     }
 
 
-def _armar_mensaje(remitente: str, from_name: str, destino: str, asunto: str, html: str):
+def _armar_mensaje(destino: str, asunto: str, contenido: str, remitente: dict):
     mensaje = MIMEMultipart("alternative")
     mensaje["Subject"] = asunto
-    mensaje["From"] = f"{from_name} <{remitente}>"
+    mensaje["From"] = f"{remitente.get('name', 'TurnipMarket')} <{remitente['email']}>"
     mensaje["To"] = destino
-    mensaje.attach(MIMEText(html, "html"))
+    mensaje.attach(MIMEText(contenido, "html"))
     return mensaje
 
 
@@ -42,7 +42,7 @@ class EmailService:
     def send_email(self, to_email: str, subject: str, html_content: str) -> bool:
         """Devuelve True si se envió, False si hubo un error."""
         cfg = self.cfg
-        mensaje = _armar_mensaje(cfg["user"], cfg["from_name"], to_email, subject, html_content)
+        mensaje = _armar_mensaje(to_email, subject, html_content, {"email": cfg["user"], "name": cfg["from_name"]})
         try:
             # Puerto 465 -> conexión SSL directa (recomendado con Gmail)
             with smtplib.SMTP_SSL(cfg["host"], cfg["port"], context=ssl.create_default_context()) as server:

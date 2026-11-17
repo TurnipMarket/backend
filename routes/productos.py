@@ -68,15 +68,17 @@ _CAMPO_A_COLUMNA = {
 }
 
 
-def _url_imagen(p: Producto, request: Request) -> str | None:
+def _url_imagen(p: Producto) -> str | None:
     if not p.imagen_url:
         return None
     if p.imagen_url.startswith(("http://", "https://")):
         return p.imagen_url
-    return f"{str(request.base_url).rstrip('/')}{p.imagen_url}"
+    if p.imagen_url.startswith("/"):
+        return p.imagen_url
+    return f"/{p.imagen_url}"
 
 
-def _serializar(p: Producto, request: Request) -> dict:
+def _serializar(p: Producto) -> dict:
     vendedor = p.vendedor
     return {
         "id": p.id,
@@ -86,7 +88,7 @@ def _serializar(p: Producto, request: Request) -> dict:
         "price": float(p.precio),
         "currency": p.moneda,
         "condition": p.condicion,
-        "image": _url_imagen(p, request),
+        "image": _url_imagen(p),
         # Solo el alias público: nunca email ni teléfono del vendedor.
         "seller": (vendedor.alias or vendedor.username) if vendedor else None,
         "seller_id": p.vendedor_id,
@@ -96,18 +98,17 @@ def _serializar(p: Producto, request: Request) -> dict:
 
 
 @router.get("")
-def get_productos(request: Request, db: Session = Depends(get_db)):
-    return [_serializar(p, request) for p in listar_productos(db)]
+def get_productos(db: Session = Depends(get_db)):
+    return [_serializar(p) for p in listar_productos(db)]
 
 
 @router.get("/user")
 def get_mis_productos(
-    request: Request,
     usuario: Usuario = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     productos = listar_productos_de_usuario(db, usuario.id)
-    return {"products": [_serializar(p, request) for p in productos]}
+    return {"products": [_serializar(p) for p in productos]}
 
 
 
@@ -135,7 +136,6 @@ def _a_nuevo_producto(req: ProductoCreate, imagen_url: str | None) -> NuevoProdu
 @router.post("", status_code=201)
 def post_producto(
     req: ProductoCreate,
-    request: Request,
     usuario: Usuario = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -149,7 +149,7 @@ def post_producto(
 
     return {
         "message": "Producto publicado correctamente.",
-        "product": _serializar(producto, request),
+        "product": _serializar(producto),
     }
 
 
@@ -163,7 +163,6 @@ def _error_http(e: Exception) -> HTTPException:
 def put_producto(
     producto_id: int,
     req: ProductoUpdate,
-    request: Request,
     usuario: Usuario = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -181,7 +180,7 @@ def put_producto(
         raise _error_http(e)
     return {
         "message": "Producto actualizado correctamente.",
-        "product": _serializar(producto, request),
+        "product": _serializar(producto),
     }
 
 
@@ -189,7 +188,6 @@ def put_producto(
 def patch_estado_producto(
     producto_id: int,
     req: EstadoUpdate,
-    request: Request,
     usuario: Usuario = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -200,7 +198,7 @@ def patch_estado_producto(
         raise _error_http(e)
     return {
         "message": "Estado actualizado correctamente.",
-        "product": _serializar(producto, request),
+        "product": _serializar(producto),
     }
 
 

@@ -3,19 +3,19 @@
 
 > Documento **generado automáticamente** por la cátedra de Programación III (RepoSense + análisis de calidad + constancia). **No editar a mano**: se regenera en cada evaluación.
 > Rama evaluada: `main`. Análisis **heurístico** (regex + métricas): es una criba para orientar la revisión, **no una nota**.
-> Generado: 2026-11-16.
+> Generado: 2026-11-17.
 
 ## 1. Veredicto
 
 | Aspecto | Resultado |
 |---|---|
 | Tipo de proyecto | backend |
-| Índice de calidad de servicios | **91/100** (mínimo 50) |
+| Índice de calidad de servicios | **69/100** (mínimo 50) |
 | Criterios cumplidos | **13/15** |
 | Aprobado (semáforo) | **NO** |
-| Código (LOC) | 766 |
+| Código (LOC) | 900 |
 | Archivos de código | 17 |
-| Tests (archivos) | 7 |
+| Tests (archivos) | 8 |
 | Cobertura de líneas | 68.8% (mínimo 80%) |
 | Capas detectadas | presentacion, logica, datos |
 | Pushes directos a `main` (sin PR) | 2 |
@@ -30,7 +30,7 @@
 
 | Autor | Commits | Código (LOC) | Tests (LOC) | Docs (LOC) | Días activos | % del código |
 |---|---:|---:|---:|---:|---:|---:|
-| matiblancooo | 12 | 1,485 | 0 | 73 | 9 | 100% |
+| matiblancooo | 13 | 2,207 | 0 | 108 | 10 | 100% |
 
 > _El LOC de autoría lo calcula RepoSense sobre el historial y puede diferir del LOC de código del análisis de calidad (que mira solo el estado de `main`)._
 
@@ -40,7 +40,7 @@
 
 | Alumno | Sesiones | Cumplimiento | Pausa | Recencia | IC | Nivel | Para subir de nivel |
 |---|--:|--:|--:|--:|--:|--|--|
-| matiblancooo | 8 | 29% | 21 d | 57% | **27** | No aprueba | Cumplimiento 29% (mín. 50%) |
+| matiblancooo | 9 | 33% | 21 d | 100% | **36** | No aprueba | Cumplimiento 33% (mín. 50%) |
 
 > Para aprobar el IC: **2 sesiones por semana** sostenidas, sin pausas mayores a **10 días** y con actividad en las **últimas 2 semanas**. Se excluyen merges, bots y al docente. Zona horaria UTC-3.
 
@@ -52,7 +52,7 @@ Cada aspecto indica **qué mide**, **por qué importa** y **tu resultado**. Cuan
 
 - **Qué mide:** Un resumen numérico (0-100) que combina todas las señales y métricas del análisis, con topes duros por duplicación.
 - **Por qué importa:** Ordena y prioriza la revisión: un índice bajo indica varias señales que conviene mirar juntas.
-- **Tu resultado:** índice **91/100** _(mínimo 50)_
+- **Tu resultado:** índice **69/100** _(mínimo 50)_
 
 ### 2. Duplicación (DRY) (duplicacion) — OK
 
@@ -112,19 +112,19 @@ Cada aspecto indica **qué mide**, **por qué importa** y **tu resultado**. Cuan
 
 - **Qué mide:** Complejidad ciclomática: cantidad de caminos posibles dentro de una función (condicionales, bucles, casos).
 - **Por qué importa:** Muchos caminos = difícil de seguir y de probar; suelen esconderse casos sin cubrir.
-- **Tu resultado:** **0** bloque(s) de complejidad alta _(máximo 5 por 1000 LOC (tenés 766 LOC))_
+- **Tu resultado:** **0** bloque(s) de complejidad alta _(máximo 5 por 1000 LOC (tenés 900 LOC))_
 
 ### 12. Funciones/métodos largos o con muchos parámetros (Tam) — OK
 
 - **Qué mide:** Tamaño de las funciones/métodos y cantidad de parámetros.
 - **Por qué importa:** Una función que hace varias cosas cuesta leerla, nombrarla y reutilizarla.
-- **Tu resultado:** **1** función/método(s) largos o con muchos parámetros _(máximo 10 por 1000 LOC)_
+- **Tu resultado:** **3** función/método(s) largos o con muchos parámetros _(máximo 10 por 1000 LOC)_
 
 ### 13. Acoplamiento alto (Acop) — A REVISAR
 
 - **Qué mide:** Cuánto depende una unidad de las partes internas de otra.
 - **Por qué importa:** Piezas muy enlazadas hacen que un cambio se propague y que sea difícil reemplazar partes.
-- **Tu resultado:** **2** unidad(es) con acoplamiento alto _(máximo 2 por 1000 LOC)_
+- **Tu resultado:** **4** unidad(es) con acoplamiento alto _(máximo 2 por 1000 LOC)_
 - **Para investigar la causa:**
     - ¿Las piezas se conocen en detalle entre sí (acceden a campos o estructuras internas)?
     - ¿El acceso a datos ocurre desde lugares que no son los responsables?
@@ -145,7 +145,7 @@ Cada aspecto indica **qué mide**, **por qué importa** y **tu resultado**. Cuan
 
 - **Qué mide:** Cantidad de endpoints (rutas HTTP) expuestos por el backend.
 - **Por qué importa:** El backend se mide por lo que expone: pocos endpoints sugiere poca funcionalidad de servicio.
-- **Tu resultado:** **22** endpoint(s) _(mínimo 5)_
+- **Tu resultado:** **28** endpoint(s) _(mínimo 5)_
 
 ## 5. Observaciones y qué falta
 
@@ -153,7 +153,7 @@ Criterios que hoy están en rojo y, para cada uno, una explicación breve de **c
 
 | Criterio | Resultado actual | Meta | Brecha | Cómo alcanzarlo |
 |---|---|---|---|---|
-| Acoplamiento alto (Acop) | **2** unidad(es) con acoplamiento alto | máximo 2 por 1000 LOC | 2 hallazgo(s); el máximo para 766 LOC es 1.5 | Hacé que cada unidad dependa de una interfaz o de un módulo de servicio, no de los detalles internos de otra; evitá acceder a campos ajenos. Meta: ≤2 por 1000 LOC. |
+| Acoplamiento alto (Acop) | **4** unidad(es) con acoplamiento alto | máximo 2 por 1000 LOC | 4 hallazgo(s); el máximo para 900 LOC es 1.8 | Hacé que cada unidad dependa de una interfaz o de un módulo de servicio, no de los detalles internos de otra; evitá acceder a campos ajenos. Meta: ≤2 por 1000 LOC. |
 | Cobertura de tests (Cob) | **68.8%** de líneas cubiertas · fuente: ejecución: pytest (aviso: requirements.txt: sin instalar 10 línea(s) (no disponibles o en conflicto: bcc==0.35.0, Brlapi==0.8.6, command…) | mínimo 80% de líneas | faltan 11.2 pts | Agregá o ampliá tests que ejecuten los módulos sin cubrir (camino principal y errores) y publicá el artefacto (`coverage/lcov.info`, `coverage-summary.json`, `coverage.xml` o `coverage.json`) o corré la suite con coverage. Meta: ≥80% de líneas. |
 
 > Empezá por las señales de seguridad (**SEC**, **SQL**) y por la **duplicación**: son las que más pesan en el índice y las más rápidas de verificar a ojo. Después de corregir, volvé a correr la medición: el semáforo se recalcula sobre `main`.
@@ -200,7 +200,7 @@ Criterios que hoy están en rojo y, para cada uno, una explicación breve de **c
 
 | Fecha | Repositorios | Commits / merges |
 |---|---|--:|
-| 2026-11-14 | frontend | 0 / 1 |
+| 2026-11-16 | frontend | 0 / 1 |
 
 ### matiblancooo
 
@@ -236,18 +236,20 @@ Criterios que hoy están en rojo y, para cada uno, una explicación breve de **c
 | 2026-11-11 | No | sin actividad | 0 / 0 |
 | 2026-11-13 | No | sin actividad | 0 / 0 |
 
-**Fuera de clase:** 2 fecha(s) con actividad · 4 commits · 1 merges
+**Fuera de clase:** 3 fecha(s) con actividad · 6 commits · 4 merges
 
 | Fecha | Repositorios | Commits / merges |
 |---|---|--:|
 | 2026-08-27 | backend | 2 / 0 |
 | 2026-11-10 | backend | 2 / 1 |
+| 2026-11-16 | backend | 2 / 3 |
 
 ## 7. Anexo: dónde mirar
 
 Archivos donde el análisis encontró cada señal en rojo (sin número de línea, a propósito):
 
-**Acoplamiento alto (Acop)** — 2 archivo(s):
+**Acoplamiento alto (Acop)** — 3 archivo(s):
+- `models/producto.py`
 - `routes/productos.py`
 - `utils/email_sender.py`
 

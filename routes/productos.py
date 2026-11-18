@@ -20,36 +20,37 @@ from utils.dependencies import get_current_user
 
 router = APIRouter(prefix="/api/products", tags=["products"])
 
-CATEGORIAS = r"^(electronics|clothing|home|sports|books|vehicles|services|other)$"
-MONEDAS = r"^(ARS|USD|UYU)$"
-CONDICIONES = r"^(new|like_new|good|fair)$"
+_CATEGORIAS = r"^(electronics|clothing|home|sports|books|vehicles|services|other)$"
+_MONEDAS = r"^(ARS|USD|UYU)$"
+_MONEDA_DEFECTO = "ARS"
+_CONDICIONES = r"^(new|like_new|good|fair)$"
 
 
 class ProductoCreate(BaseModel):
-    """Mismos nombres y límites que el formulario del frontend (CreateProductPage)."""
+    """mismos nombres y límites que el formulario del front (pantalla de crear producto)."""
 
     model_config = {"str_strip_whitespace": True}
 
     title: str = Field(min_length=3, max_length=100)
     description: str = Field(min_length=10, max_length=2000)
-    category: str = Field(default="other", pattern=CATEGORIAS)
+    category: str = Field(default="other", pattern=_CATEGORIAS)
     price: Decimal = Field(gt=0, le=999_999_999, max_digits=12, decimal_places=2)
-    currency: str = Field(default="ARS", pattern=MONEDAS)
-    condition: str = Field(default="new", pattern=CONDICIONES)
-    # data URL o base64 de la foto (máx 5MB reales ≈ 7,0M de caracteres en base64).
+    currency: str = Field(default=_MONEDA_DEFECTO, pattern=_MONEDAS)
+    condition: str = Field(default="new", pattern=_CONDICIONES)
+    # url de datos o base64 de la foto (máx 5MB reales ≈ 7,0M de caracteres en base64).
     image: str | None = Field(default=None, max_length=7_200_000)
 
 class ProductoUpdate(BaseModel):
-    """Edición parcial: se manda solo lo que cambia. Mismos límites que ProductoCreate."""
+    """edición parcial: se manda solo lo que cambia, con los mismos límites que al crear."""
 
     model_config = {"str_strip_whitespace": True}
 
     title: str | None = Field(default=None, min_length=3, max_length=100)
     description: str | None = Field(default=None, min_length=10, max_length=2000)
-    category: str | None = Field(default=None, pattern=CATEGORIAS)
+    category: str | None = Field(default=None, pattern=_CATEGORIAS)
     price: Decimal | None = Field(default=None, gt=0, le=999_999_999, max_digits=12, decimal_places=2)
-    currency: str | None = Field(default=None, pattern=MONEDAS)
-    condition: str | None = Field(default=None, pattern=CONDICIONES)
+    currency: str | None = Field(default=None, pattern=_MONEDAS)
+    condition: str | None = Field(default=None, pattern=_CONDICIONES)
 
 
 class EstadoUpdate(BaseModel):

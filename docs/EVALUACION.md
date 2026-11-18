@@ -244,15 +244,22 @@ Criterios que hoy están en rojo y, para cada uno, una explicación breve de **c
 | 2026-11-16 | backend | 2 / 2 |
 | 2026-11-17 | backend | 0 / 1 |
 
-## 7. Anexo: dónde mirar
+## 7. Anexo: archivos donde se originan los problemas
 
-Archivos donde el análisis encontró cada señal en rojo (sin número de línea, a propósito):
+Se listan los archivos y líneas que el análisis marca para cada criterio en rojo. Para **duplicación** se muestran los archivos con más líneas repetidas; para **cobertura**, las unidades por debajo del umbral.
 
-**Acoplamiento alto (Acop)** — 3 archivo(s):
-- `models/producto.py`
-- `routes/productos.py`
-- `utils/email_sender.py`
+**Acoplamiento alto (Acop)** — 4 hallazgo(s) en 3 archivo(s):
+
+| Archivo | Línea(s) | Señal |
+|---|---|---|
+| `models/producto.py` | 11 | clase 'Producto' muy acoplada (CBO=14) |
+| `routes/productos.py` | 28, 42 | clase 'ProductoCreate' muy acoplada (CBO=10) |
+| `utils/email_sender.py` | 34 | clase 'EmailService' muy acoplada (CBO=10) |
+
+**Cobertura (Cob)** — unidades por debajo del umbral:
+
+- `.` — 79.0% (None/None líneas)
 
 ---
-_Informe generado por la cátedra. Los umbrales corresponden al perfil `exigente`. Ante dudas, revisá el archivo señalado y el criterio en `CRITERIOS-CALIDAD.md`._
+_Informe generado por la cátedra. Los umbrales corresponden al perfil `exigente`. Ante dudas, revisá el archivo y la línea señalados y el criterio en `CRITERIOS-CALIDAD.md`._
 <!-- evaluacion:fin -->

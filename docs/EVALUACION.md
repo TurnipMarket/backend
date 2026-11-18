@@ -3,7 +3,7 @@
 
 > Documento **generado automáticamente** por la cátedra de Programación III (RepoSense + análisis de calidad + constancia). **No editar a mano**: se regenera en cada evaluación.
 > Rama evaluada: `main`. Análisis **heurístico** (regex + métricas): es una criba para orientar la revisión, **no una nota**.
-> Generado: 2026-11-17.
+> Generado: 2026-11-18.
 
 ## 1. Veredicto
 
@@ -13,16 +13,14 @@
 | Índice de calidad de servicios | **69/100** (mínimo 50) |
 | Criterios cumplidos | **13/15** |
 | Aprobado (semáforo) | **NO** |
-| Código (LOC) | 900 |
+| Código (LOC) | 898 |
 | Archivos de código | 17 |
-| Tests (archivos) | 8 |
-| Cobertura de líneas | 68.8% (mínimo 80%) |
+| Tests (archivos) | 9 |
+| Cobertura de líneas | 79.0% (mínimo 80%) |
 | Capas detectadas | presentacion, logica, datos |
 | Pushes directos a `main` (sin PR) | 2 |
 
 > **Pushes directos:** se detectaron **2** commit(s) a `main` que no pasaron por un Pull Request. El flujo esperado es **rama → PR → revisión → merge**; el PR se aprueba con el mensaje `Aprobado`. Evitá pushear directo a `main`: la ruleset lo bloquea y el commit directo queda auditado.
-
-> **Qué no se consideró:** el repositorio publica un informe de cobertura que **no se aceptó** como medición (coverage.xml: 18% de las líneas declaradas son blancos, comentarios o docstrings (no son ejecutables)). Esos valores no se usan: el número de arriba sale de **ejecutar la suite** tal como está en el repositorio. Un artefacto de cobertura sirve cuando lo genera un runner sobre el mismo código; si declara líneas que el runner no puede ejecutar, no es una medición.
 
 > **Aprobado** exige las compuertas críticas (**SEC**, **SQL**, **capas**, **índice ≥ 50** y **cobertura ≥ 80 %** cuando aplica) y tolera hasta **3 criterios en rojo** (12/15). No es una nota: sirve para ordenar y priorizar la revisión.
 
@@ -30,7 +28,7 @@
 
 | Autor | Commits | Código (LOC) | Tests (LOC) | Docs (LOC) | Días activos | % del código |
 |---|---:|---:|---:|---:|---:|---:|
-| matiblancooo | 13 | 2,207 | 0 | 108 | 10 | 100% |
+| matiblancooo | 14 | 2,432 | 0 | 108 | 11 | 100% |
 
 > _El LOC de autoría lo calcula RepoSense sobre el historial y puede diferir del LOC de código del análisis de calidad (que mira solo el estado de `main`)._
 
@@ -40,7 +38,7 @@
 
 | Alumno | Sesiones | Cumplimiento | Pausa | Recencia | IC | Nivel | Para subir de nivel |
 |---|--:|--:|--:|--:|--:|--|--|
-| matiblancooo | 9 | 33% | 21 d | 100% | **36** | No aprueba | Cumplimiento 33% (mín. 50%) |
+| matiblancooo | 9 | 32% | 21 d | 86% | **33** | No aprueba | Cumplimiento 32% (mín. 50%) |
 
 > Para aprobar el IC: **2 sesiones por semana** sostenidas, sin pausas mayores a **10 días** y con actividad en las **últimas 2 semanas**. Se excluyen merges, bots y al docente. Zona horaria UTC-3.
 
@@ -112,13 +110,13 @@ Cada aspecto indica **qué mide**, **por qué importa** y **tu resultado**. Cuan
 
 - **Qué mide:** Complejidad ciclomática: cantidad de caminos posibles dentro de una función (condicionales, bucles, casos).
 - **Por qué importa:** Muchos caminos = difícil de seguir y de probar; suelen esconderse casos sin cubrir.
-- **Tu resultado:** **0** bloque(s) de complejidad alta _(máximo 5 por 1000 LOC (tenés 900 LOC))_
+- **Tu resultado:** **0** bloque(s) de complejidad alta _(máximo 5 por 1000 LOC (tenés 898 LOC))_
 
 ### 12. Funciones/métodos largos o con muchos parámetros (Tam) — OK
 
 - **Qué mide:** Tamaño de las funciones/métodos y cantidad de parámetros.
 - **Por qué importa:** Una función que hace varias cosas cuesta leerla, nombrarla y reutilizarla.
-- **Tu resultado:** **3** función/método(s) largos o con muchos parámetros _(máximo 10 por 1000 LOC)_
+- **Tu resultado:** **0** función/método(s) largos o con muchos parámetros _(máximo 10 por 1000 LOC)_
 
 ### 13. Acoplamiento alto (Acop) — A REVISAR
 
@@ -134,8 +132,7 @@ Cada aspecto indica **qué mide**, **por qué importa** y **tu resultado**. Cuan
 
 - **Qué mide:** Porcentaje de líneas de código ejecutadas por la suite de tests (cobertura real, no cantidad de archivos de test).
 - **Por qué importa:** Un test que existe pero no ejecuta el código no protege de nada: la cobertura muestra qué partes quedan sin verificar.
-- **Tu resultado:** **68.8%** de líneas cubiertas · fuente: ejecución: pytest (aviso: requirements.txt: sin instalar 10 línea(s) (no disponibles o en conflicto: bcc==0.35.0, Brlapi==0.8.6, command…) _(mínimo 80% de líneas)_
-- **Qué no se consideró:** el informe de cobertura publicado en el repositorio no se aceptó (coverage.xml: 18% de las líneas declaradas son blancos, comentarios o docstrings (no son ejecutables)).
+- **Tu resultado:** **79.0%** de líneas cubiertas · fuente: artefacto: coverage.xml _(mínimo 80% de líneas)_
 - **Para investigar la causa:**
     - ¿Qué módulos o ramas del sistema nunca se ejecutan en los tests?
     - ¿Los tests prueban el camino principal y los errores, o solo el caso feliz?
@@ -153,18 +150,18 @@ Criterios que hoy están en rojo y, para cada uno, una explicación breve de **c
 
 | Criterio | Resultado actual | Meta | Brecha | Cómo alcanzarlo |
 |---|---|---|---|---|
-| Acoplamiento alto (Acop) | **4** unidad(es) con acoplamiento alto | máximo 2 por 1000 LOC | 4 hallazgo(s); el máximo para 900 LOC es 1.8 | Hacé que cada unidad dependa de una interfaz o de un módulo de servicio, no de los detalles internos de otra; evitá acceder a campos ajenos. Meta: ≤2 por 1000 LOC. |
-| Cobertura de tests (Cob) | **68.8%** de líneas cubiertas · fuente: ejecución: pytest (aviso: requirements.txt: sin instalar 10 línea(s) (no disponibles o en conflicto: bcc==0.35.0, Brlapi==0.8.6, command…) | mínimo 80% de líneas | faltan 11.2 pts | Agregá o ampliá tests que ejecuten los módulos sin cubrir (camino principal y errores) y publicá el artefacto (`coverage/lcov.info`, `coverage-summary.json`, `coverage.xml` o `coverage.json`) o corré la suite con coverage. Meta: ≥80% de líneas. |
+| Acoplamiento alto (Acop) | **4** unidad(es) con acoplamiento alto | máximo 2 por 1000 LOC | 4 hallazgo(s); el máximo para 898 LOC es 1.8 | Hacé que cada unidad dependa de una interfaz o de un módulo de servicio, no de los detalles internos de otra; evitá acceder a campos ajenos. Meta: ≤2 por 1000 LOC. |
+| Cobertura de tests (Cob) | **79.0%** de líneas cubiertas · fuente: artefacto: coverage.xml | mínimo 80% de líneas | faltan 1.0 pts | Agregá o ampliá tests que ejecuten los módulos sin cubrir (camino principal y errores) y publicá el artefacto (`coverage/lcov.info`, `coverage-summary.json`, `coverage.xml` o `coverage.json`) o corré la suite con coverage. Meta: ≥80% de líneas. |
 
 > Empezá por las señales de seguridad (**SEC**, **SQL**) y por la **duplicación**: son las que más pesan en el índice y las más rápidas de verificar a ojo. Después de corregir, volvé a correr la medición: el semáforo se recalcula sobre `main`.
 
 ## 6. Actividad en clase y fuera de clase
 
-> Se consideran las **27 clases** del período (miércoles y viernes, según `config/constancia.json`; feriados y semanas sin clase descontados). Para cada alumno se muestra la actividad **en cada clase** y también la actividad **fuera de los días de clase** (fines de semana u otros días). `Commits` = commits de trabajo (no-merge); `Merges` = merges de PR (también son push). Los días sin actividad dicen **sin actividad**.
+> Se consideran las **28 clases** del período (miércoles y viernes, según `config/constancia.json`; feriados y semanas sin clase descontados). Para cada alumno se muestra la actividad **en cada clase** y también la actividad **fuera de los días de clase** (fines de semana u otros días). `Commits` = commits de trabajo (no-merge); `Merges` = merges de PR (también son push). Los días sin actividad dicen **sin actividad**.
 
 ### Candelaetec
 
-**14/27 clases con actividad** · total del período: 15 commits · 9 merges
+**14/28 clases con actividad** · total del período: 15 commits · 9 merges
 
 | Fecha | Actividad | Repositorios | Commits / merges |
 |---|:--:|---|--:|
@@ -195,6 +192,7 @@ Criterios que hoy están en rojo y, para cada uno, una explicación breve de **c
 | 2026-11-06 | No | sin actividad | 0 / 0 |
 | 2026-11-11 | **Sí** | frontend | 1 / 0 |
 | 2026-11-13 | No | sin actividad | 0 / 0 |
+| 2026-11-18 | No | sin actividad | 0 / 0 |
 
 **Fuera de clase:** 1 fecha(s) con actividad · 0 commits · 1 merges
 
@@ -204,7 +202,7 @@ Criterios que hoy están en rojo y, para cada uno, una explicación breve de **c
 
 ### matiblancooo
 
-**7/27 clases con actividad** · total del período: 9 commits · 7 merges
+**7/28 clases con actividad** · total del período: 9 commits · 7 merges
 
 | Fecha | Actividad | Repositorios | Commits / merges |
 |---|:--:|---|--:|
@@ -235,14 +233,16 @@ Criterios que hoy están en rojo y, para cada uno, una explicación breve de **c
 | 2026-11-06 | No | sin actividad | 0 / 0 |
 | 2026-11-11 | No | sin actividad | 0 / 0 |
 | 2026-11-13 | No | sin actividad | 0 / 0 |
+| 2026-11-18 | No | sin actividad | 0 / 0 |
 
-**Fuera de clase:** 3 fecha(s) con actividad · 6 commits · 4 merges
+**Fuera de clase:** 4 fecha(s) con actividad · 6 commits · 4 merges
 
 | Fecha | Repositorios | Commits / merges |
 |---|---|--:|
 | 2026-08-27 | backend | 2 / 0 |
 | 2026-11-10 | backend | 2 / 1 |
-| 2026-11-16 | backend | 2 / 3 |
+| 2026-11-16 | backend | 2 / 2 |
+| 2026-11-17 | backend | 0 / 1 |
 
 ## 7. Anexo: dónde mirar
 
